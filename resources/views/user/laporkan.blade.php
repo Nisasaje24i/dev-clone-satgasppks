@@ -73,30 +73,55 @@
                             <div class="form">
                                 <div class="col-lg-12">
                                     <p class="fst-italic">Nama Lengkap *</p>
-                                    <input type="text" class="form-control" style="border-color: black;" id="nama_lengkap_pelapor" name="nama_lengkap_pelapor" value="{{$nama}}" readonly>
+                                    <input type="text" class="form-control" style="border-color: black;" id="nama_lengkap_pelapor" name="nama_lengkap_pelapor" value="{!! Session::get('nama_lengkap'); !!}" readonly>
                                 </div>
                                 <br>
                                 <div class="col-lg-12">
                                     <p class="fst-italic">Jenis Identitas *</p>
-                                    <select class="form-select" style="border-color: black;" id="jenis_identitas_pelapor" name="jenis_identitas_pelapor">
+                                    @php
+                                    $nomorIdentitas = '';
+                                    $selectedMahasiswa = '';
+                                    $selectedDosen = '';
+                                    $selectedPegawai = '';
+                                    @endphp
+                                    @if(str_contains(strtolower(Session::get('id_login')), 'nip'))
+                                    @php
+                                    $selectedPegawai = 'selected';
+                                    $nomorIdentitas = preg_replace('/nip/', '', Session::get('id_login'));
+                                    @endphp
+                                    @elseif(str_contains(strtolower(Session::get('id_login')), 'nidn'))
+                                    @php
+                                    $selectedDosen = 'selected';
+                                    $nomorIdentitas = preg_replace('/nidn/', '', Session::get('id_login'));
+                                    @endphp
+                                    @elseif(str_contains(strtolower(Session::get('id_login')), 'nim'))
+                                    @php
+                                    $selectedMahasiswa = 'selected';
+                                    $nomorIdentitas = preg_replace('/nim/', '', Session::get('id_login'));
+                                    @endphp
+                                    @else
+                                    @php
+                                    $selectedPegawai = '';
+                                    $selectedDosen = '';
+                                    $selectedMahasiswa = '';
+                                    $nomorIdentitas = '';
+                                    @endphp
+                                    @endif
+                                    <select class="form-select" style="border-color: black;" id="jenis_identitas_pelapor" name="jenis_identitas_pelapor" disabled>
                                         <option value="">Pilih jenis identitas</option>
-                                        <option value="ktm">KTM</option>
-                                        <option value="kartudosen">Kartu Dosen</option>
-                                        <option value="kartupegawai">Kartu Pegawai</option>
-                                        <option value="kartupetugas">Kartu Petugas</option>
+                                        <option value="ktm" {{$selectedMahasiswa}}>KTM</option>
+                                        <option value="kartudosen" {{$selectedDosen}}>Kartu Dosen</option>
+                                        <option value="kartupegawai" {{$selectedPegawai}}>Kartu Pegawai</option>
                                     </select>
                                 </div>
                                 <br>
                                 <div class="col-lg-12">
                                     <p class="fst-italic">Nomor Identitas *</p>
-                                    @php
-                                    $numeric_id = preg_replace('/\D/', '', $id_login);
-                                    @endphp
-                                    <input type="text" class="form-control" style="border-color: black;" id="nomor_identitas_pelapor" name="nomor_identitas_pelapor" value="{{$numeric_id}}" readonly>
+                                    <input type="text" class="form-control" style="border-color: black;" id="nomor_identitas_pelapor" name="nomor_identitas_pelapor" value="{{$nomorIdentitas}}" readonly>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class=" col-lg-4">
                             <div class="form">
                                 <div class="col-lg-12">
                                     <p class="fst-italic">No. Handphone *</p>
@@ -110,55 +135,81 @@
                                 <br>
                                 <div class="col-lg-12">
                                     <p class="fst-italic">Nama Unit Kerja/Jurusan *</p>
-                                    <select class="form-select" style="border-color: black;" id="profesi_pelapor" name="profesi_pelapor">
+                                    @php
+                                    $selectedTeknikInformatika = '';
+                                    $selectedSistemInformasi = '';
+                                    $selectedKaryawan = '';
+                                    @endphp
+                                    @if(Session::get('program_studi') == "Teknik Informatika")
+                                    @php
+                                    $selectedTeknikInformatika = 'selected';
+                                    @endphp
+                                    @elseif(Session::get('program_studi') == "Sistem Informasi")
+                                    @php
+                                    $selectedSistemInformasi = 'selected';
+                                    @endphp
+                                    @elseif(Session::get('program_studi') == "Karyawan")
+                                    @php
+                                    $selectedKaryawan = 'selected';
+                                    $nomorIdentitas = preg_replace('/nim/', '', Session::get('id_login'));
+                                    @endphp
+                                    @else
+                                    @php
+                                    $selectedTeknikInformatika = '';
+                                    $selectedSistemInformasi = '';
+                                    $selectedKaryawan = '';
+                                    @endphp
+                                    @endif
+                                    <select class="form-select" style="border-color: black;" id="profesi_pelapor" name="profesi_pelapor" disabled>
                                         <option value="">Pilih</option>
-                                        <option value="if">Teknik Informatika</option>
-                                        <option value="si">Sistem Informasi</option>
-                                        <option value="karyawan">Karyawan</option>
+                                        <option value="if" {{$selectedTeknikInformatika}}>Teknik Informatika</option>
+                                        <option value="si" {{$selectedSistemInformasi}}>Sistem Informasi</option>
+                                        <option value="karyawan" {{$selectedKaryawan}}>Karyawan</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <br>
-                    <div class="container" style="background-color: grey; height:1px; margin-top:5px;"></div>
-                    <div class="logo me-auto"><img src="assets/img/person.png" alt="" width="40px" style="margin-right: 10px;">
-                        <b style="color: black;">IDENTITAS TERLAPOR</b>
-                    </div>
-                    <div class="container" style="background-color: grey; height:1px; margin-top:5px;"></div>
-                    <br>
-                    <div class="row  justify-content-center">
-                        <div class="col-lg-4" style="margin-right:70px;">
-                            <div class="form">
-                                <div class="col-lg-12">
-                                    <p class="fst-italic">Nama Lengkap *</p>
-                                    <input type="text" class="form-control" style="border-color: black;" id="nama_lengkap_terlapor" name="nama_lengkap_terlapor">
+                    <!-- <div class="container" style="background-color: grey; height:1px; margin-top:5px;"></div>
+                            <div class="logo me-auto"><img src="assets/img/person.png" alt="" width="40px" style="margin-right: 10px;">
+                                <b style="color: black;">IDENTITAS TERLAPOR</b>
+                            </div>
+                            <div class="container" style="background-color: grey; height:1px; margin-top:5px;"></div>
+                            <br>
+                            <div class="row  justify-content-center">
+                                <div class="col-lg-4" style="margin-right:70px;">
+                                    <div class="form">
+                                        <div class="col-lg-12">
+                                            <p class="fst-italic">Nama Lengkap *</p>
+                                            <input type="text" class="form-control" style="border-color: black;" id="nama_lengkap_terlapor" name="nama_lengkap_terlapor">
+                                        </div>
+                                        <br>
+                                        <div class="col-lg-12">
+                                            <p class="fst-italic">Status Terlapor *</p>
+                                            <select class="form-select" style="border-color: black;" id="status_terlapor" name="status_terlapor">
+                                                <option value="">Pilih jenis identitas</option>
+                                                <option value="Mahasiswa">Mahasiswa</option>
+                                                <option value="Staff/Karyawan">Staff/Karyawan</option>
+                                                <option value="Dosen">Dosen</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br>
-                                <div class="col-lg-12">
-                                    <p class="fst-italic">Status Terlapor *</p>
-                                    <select class="form-select" style="border-color: black;" id="status_terlapor" name="status_terlapor">
-                                        <option value="">Pilih jenis identitas</option>
-                                        <option value="Mahasiswa">Mahasiswa</option>
-                                        <option value="Staff/Karyawan">Staff/Karyawan</option>
-                                        <option value="Dosen">Dosen</option>
-                                    </select>
+                                <div class="col-lg-4">
+                                    <div class="form">
+                                        <div class="col-lg-12">
+                                            <p class="fst-italic">Nomor Identitas *</p>
+                                            <input type="text" class="form-control" style="border-color: black;" id="nomor_identitas_terlapor" name="nomor_identitas_terlapor">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form">
-                                <div class="col-lg-12">
-                                    <p class="fst-italic">Nomor Identitas *</p>
-                                    <input type="text" class="form-control" style="border-color: black;" id="nomor_identitas_terlapor" name="nomor_identitas_terlapor">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <br>
+                            <br> -->
                     <div class="d-flex justify-content-center">
-                        <button id="btnSelanjutnya" onclick="lanjutPage()" type="button" style="border-radius:10px; background-color: yellow; color: red; border: none; padding: 10px 20px; font-size: 16px;">Selanjutnya..</button>
+                        <!-- <button id="btnSelanjutnya" onclick="lanjutPage()" type="button" style="border-radius:10px; background-color: yellow; color: red; border: none; padding: 10px 20px; font-size: 16px;">Selanjutnya..</button> -->
+                        <button id="btnSelanjutnya" onclick="kirimLaporanDakwa()" type="button" style="border-radius:10px; background-color: yellow; color: red; border: none; padding: 10px 20px; font-size: 16px;">Laporkan!</button>
                     </div>
                 </form>
             </div>
@@ -186,40 +237,44 @@
         // });
 
 
-        // function lanjutPage() {
-        //     var url;
-        //     var method;
+        function kirimLaporanDakwa() {
+            var url;
+            var method;
 
-        //     url = '{{ route("laporkan.next") }}';
-        //     method = 'POST';
+            url = '{{ route("dakwa.kirim") }}';
+            method = 'POST';
 
-        //     var formData = new FormData(document.getElementById('formLaporkan'));
+            $("#jenis_identitas_pelapor").removeAttr("disabled");
+            $("#profesi_pelapor").removeAttr("disabled");
+            var formData = new FormData(document.getElementById('formLaporkan'));
+            $("#jenis_identitas_pelapor").attr("disabled", true);
+            $("#profesi_pelapor").attr("disabled", true);
 
-        //     $.ajax({
-        //         type: method,
-        //         url: url,
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(response) {
-        //             console.log(response);
-        //             Swal.fire({
-        //                 icon: 'success',
-        //                 title: 'Sukses!',
-        //                 text: 'Berhasil Menambahkan Identitas'
-        //             });
-        //             window.location.href = "{{ route('laporkan.next') }}";
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error(xhr.responseText);
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Gagal',
-        //                 text: 'Gagal Menambahkan Identitas'
-        //             });
-        //         }
-        //     });
-        // }
+            $.ajax({
+                type: method,
+                url: url,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses!',
+                        text: 'Berhasil Mengirim Laporan.'
+                    });
+                    // window.location.href = "{{ route('laporkan.next') }}";
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Gagal Mengirim Laporan!'
+                    });
+                }
+            });
+        }
 
         function lanjutPage() {
             var formData = new FormData(document.getElementById('formLaporkan'));

@@ -49,6 +49,8 @@ Route::get('/riwayat_laporan', [RiwayatLaporanController::class, 'riwayat_lapora
 
 //laporkan
 Route::get('/laporkan', [LaporkanController::class, 'laporkan']);
+Route::post('/dakwa_kirim', [LaporkanController::class, 'dakwa_kirim'])->name('dakwa.kirim');
+Route::post('/dakwa_edit', [LaporkanController::class, 'dakwa_edit'])->name('dakwa.edit');
 Route::post('/laporkan_next', [LaporkanController::class, 'laporkan_next'])->name('laporkan.next');
 Route::get('/laporkan_next', [LaporkanController::class, 'laporkan_next'])->name('laporkan.next');
 Route::post('/laporkan_kirim', [LaporkanController::class, 'laporkan_kirim'])->name('laporkan.kirim');
@@ -118,6 +120,11 @@ Route::get('/getLaporanById/{no_laporan}', [LaporkanController::class, 'getLapor
 Route::put('/updatePenanganan/{no_laporan}', [LaporkanController::class, 'updatePenanganan']);
 Route::put('/updateStatus/{no_laporan}', [LaporkanController::class, 'updateStatus']);
 Route::POST('/updateSanksi/{no_laporan}', [LaporkanController::class, 'updateSanksi']);
+
+//laporan_masuk_divisi_pelaporan
+Route::get('/view_laporan_masuk_divisi_pelaporan', [LaporkanController::class, 'view_divisi_pelaporan']);
+Route::get('/view_laporan_masuk_divisi_deteksi', [LaporkanController::class, 'view_divisi_pencegahan_deteksi']);
+Route::get('/view_laporan_masuk_divisi_pemulihan', [LaporkanController::class, 'view_divisi_pemulihan']);
 
 //pengguna
 Route::get('/data_pengguna', [PenggunaController::class, 'data_pengguna']);

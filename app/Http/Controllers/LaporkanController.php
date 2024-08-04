@@ -13,6 +13,9 @@ use App\Models\Mahasiswa;
 use App\Models\Petugas;
 use App\Models\Saksi;
 use App\Models\Sanksi;
+use App\Models\DivisiPelaporan;
+use App\Models\DivisiPemulihan;
+use App\Models\DivisiPencegahanDeteksi;
 use Illuminate\Http\Request;
 use Symfony\Component\VarDumper\VarDumper;
 use Illuminate\Support\Str;
@@ -22,51 +25,7 @@ class LaporkanController extends Controller
 {
     public function laporkan(Request $request)
     {
-        $id_login = $request->session()->get('id_login');
-
-        if (strpos($id_login, 'nim') === 0) {
-            // id_login dimulai dengan 'nim'
-            $id_logins = preg_replace('/nim/', '', $id_login);
-            $mahasiswa = Mahasiswa::all();
-            foreach ($mahasiswa as $mhs) {
-                if ($mhs->nim == $id_login) {
-                    $nama = $mhs->nama_lengkap;
-                    // echo '<pre>';
-                    // dd($nama);
-                    // echo '</pre>';
-                    // exit;
-                }
-            }
-        } elseif (strpos($id_login, 'nidn') === 0) {
-            // id_login dimulai dengan 'nidn'
-            $id_logins = preg_replace('/nidn/', '', $id_login);
-            $dosen = Dosen::all();
-            foreach ($dosen as $dsn) {
-                if ($dsn->nidn == $id_login) {
-                    $nama = $dsn->nama_lengkap;
-                    // echo '<pre>';
-                    // dd($nama);
-                    // echo '</pre>';
-                    // exit;
-                }
-            }
-        } elseif (strpos($id_login, 'nip') === 0) {
-            // id_login dimulai dengan 'nip'
-            $id_logins = preg_replace('/nip/', '', $id_login);
-            $karyawan = Karyawan::all();
-            foreach ($karyawan as $kry) {
-                if ($kry->nip == $id_login) {
-                    $nama = $kry->nama_lengkap;
-                    // echo '<pre>';
-                    // dd($nama);
-                    // echo '</pre>';
-                    // exit;
-                }
-            }
-        } else {
-            $nama = 'ID tidak valid';
-        }
-        return view('user/laporkan', ['nama' => $nama, 'id_login' => $id_login]);
+        return view('user/laporkan');
     }
 
     public function laporkan_next(Request $request)
@@ -85,11 +44,57 @@ class LaporkanController extends Controller
         return view('user/laporkan_next', compact('kriteria', 'tb_kriteria_pilihan', 'tb_nama_kss'))->with('data', $data);
     }
 
+    public function dakwa_kirim(Request $request)
+    {
+        $response = $request->post();
+
+        // $nik = substr($response['nik'], 0, 5);
+
+        $nomor_identitas_pelapor = $response['nomor_identitas_pelapor'];
+
+        // $laporanAll = Laporkan::where('nik', $response['nik'])->first();
+        $laporanAll = Laporkan::where('nomor_identitas_pelapor', $nomor_identitas_pelapor)->get();
+
+        if (isset($laporanAll)) {
+            $countLaporanAll = $laporanAll->count();
+        }
+
+        if (isset($laporanAll) && $laporanAll->count() >= 1) {
+            $nomorLaporan = 'LP' . $nomor_identitas_pelapor . '_' . $countLaporanAll + 1;
+        } else {
+            $nomorLaporan = 'LP' . $nomor_identitas_pelapor . '_1';
+        }
+
+        try {
+
+            $laporan = Laporkan::create([
+                'no_laporan' => $nomorLaporan,
+                'nama_lengkap_pelapor' => $response['nama_lengkap_pelapor'],
+                'jenis_identitas_pelapor' => $response['jenis_identitas_pelapor'],
+                'nomor_identitas_pelapor' => $response['nomor_identitas_pelapor'],
+                'no_hp_pelapor' => $response['no_hp_pelapor'],
+                'nik' => $response['nik'],
+                'profesi_pelapor' => $response['profesi_pelapor'],
+                'kode_alur' => '01'
+            ]);
+        } catch (\Exception $e) {
+
+            //   return $e->getMessage();
+            return response()->json(['error' => 'Data laporan tidak berhasil disimpan']);
+        }
+    }
+
     public function laporkan_kirim(Request $request)
     {
         $response = $request->post();
         $arrResponse = json_decode($request->input('data'), true);
         $arrDokumen = $request->file();
+        echo '<pre>';
+        print_r($arrDokumen);
+        print_r($arrResponse);
+        print_r($response);
+        echo '</pre>';
+        exit;
 
         $request->validate([
             'kekerasan_seksual' => 'required|string|max:255',
@@ -100,11 +105,7 @@ class LaporkanController extends Controller
             'saksi' => 'required|string|max:255',
         ]);
 
-        // echo '<pre>';
-        // var_dump($arrDokumen);
-        // var_dump($response);
-        // echo '</pre>';
-        // exit;
+
 
 
         $nik = substr($arrResponse['nik'], 0, 5);
@@ -454,5 +455,41 @@ class LaporkanController extends Controller
             fn () => print($pdf),
             "document.pdf"
         );
+    }
+
+    public function view_divisi_pelaporan(Request $request)
+    {
+        $laporan_kekerasan_seksual = Laporkan::where('kode_alur', '<=', '02')->get();
+        foreach ($laporan_kekerasan_seksual as $datum_laporan_kekerasan_seksualKey => $datum_laporan_kekerasan_seksualValue) {
+            $laporan_divisi_pelaporan =  DivisiPelaporan::where('no_laporan', $datum_laporan_kekerasan_seksualValue['no_laporan'])->get();
+            $bukti =  Bukti::where('no_laporan', $datum_laporan_kekerasan_seksualValue['no_laporan'])->get();
+            $saksi =  Saksi::where('no_laporan', $datum_laporan_kekerasan_seksualValue['no_laporan'])->get();
+            $laporan_kekerasan_seksual[$datum_laporan_kekerasan_seksualKey]['laporan_divisi_pelaporan'] = $laporan_divisi_pelaporan;
+            $laporan_kekerasan_seksual[$datum_laporan_kekerasan_seksualKey]['bukti'] = $bukti;
+            $laporan_kekerasan_seksual[$datum_laporan_kekerasan_seksualKey]['saksi'] = $saksi;
+        }
+        return view('admin/view_laporan_masuk_divisi_pelaporan', ['laporan_kekerasan_seksual' => $laporan_kekerasan_seksual]);
+    }
+
+    public function dakwa_edit(Request $request)
+    {
+        $response = $request->post();
+        $arrDokumen = $request->file();
+
+        echo '<pre>';
+        print_r($response);
+        print_r($arrDokumen);
+        echo '</pre>';
+        exit;
+    }
+
+    public function view_divisi_pencegahan_deteksi(Request $request)
+    {
+        return view('admin/view_laporan_masuk_divisi_deteksi', []);
+    }
+
+    public function view_divisi_pemulihan(Request $request)
+    {
+        return view('admin/view_laporan_masuk_divisi_pemulihan', []);
     }
 }

@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class BerandaController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $petugas = Petugas::all();
         $program = Program::all();
@@ -58,7 +58,7 @@ class BerandaController extends Controller
             'jumlah_laporan_masuk' => $jumlah_laporan_masuk,
             'jumlah_selesai' => $jumlah_selesai,
             'laporan_array' => $laporan_array,
-            'laporan_array_selesai' => $laporan_array_selesai,
+            'laporan_array_selesai' => $laporan_array_selesai
         ]);
     }
 }

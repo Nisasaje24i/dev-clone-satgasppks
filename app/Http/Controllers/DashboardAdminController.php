@@ -8,10 +8,20 @@ use Illuminate\Http\Request;
 
 class DashboardAdminController extends Controller
 {
-    public function dashboard_admin()
+    public function dashboard_admin(Request $request)
     {
         $jumlah_laporan_masuk = Laporkan::where('status_laporan', '!=', 'selesai')->count();
         $jumlah_selesai = Laporkan::where('status_laporan', 'selesai')->count();
+
+        $jumlah_laporan_masuk_div_pelaporan = Laporkan::where('kode_alur', '<=', '02')->count();
+        $jumlah_selesai_div_pelaporan = Laporkan::where('kode_alur', '>', '02')->count();
+
+        $jumlah_laporan_masuk_div_pencegahan = Laporkan::where('kode_alur', '03')->count();
+        $jumlah_selesai_div_pencegahan = Laporkan::where('kode_alur', '>', '03')->count();
+
+        $jumlah_laporan_masuk_div_pemulihan = Laporkan::where('kode_alur', '04')->count();
+        $jumlah_selesai_div_pemulihan = Laporkan::where('kode_alur', '>', '04')->count();
+
         $jumlah_laporan_per_bulan = Laporkan::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as total')
             ->where('status_laporan', '!=', 'selesai')
             ->groupBy('year', 'month')
@@ -50,7 +60,13 @@ class DashboardAdminController extends Controller
             'jumlah_laporan_masuk' => $jumlah_laporan_masuk,
             'jumlah_selesai' => $jumlah_selesai,
             'laporan_array' => $laporan_array,
-            'laporan_array_selesai' => $laporan_array_selesai
+            'laporan_array_selesai' => $laporan_array_selesai,
+            'jumlah_laporan_masuk_div_pelaporan' => $jumlah_laporan_masuk_div_pelaporan,
+            'jumlah_selesai_div_pelaporan' => $jumlah_selesai_div_pelaporan,
+            'jumlah_laporan_masuk_div_pencegahan' => $jumlah_laporan_masuk_div_pencegahan,
+            'jumlah_selesai_div_pencegahan' => $jumlah_selesai_div_pencegahan,
+            'jumlah_laporan_masuk_div_pemulihan' => $jumlah_laporan_masuk_div_pemulihan,
+            'jumlah_selesai_div_pemulihan' => $jumlah_selesai_div_pemulihan
         ]);
     }
 }

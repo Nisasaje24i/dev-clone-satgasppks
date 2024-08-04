@@ -12,6 +12,8 @@
                 };
                 @endphp
                 @if(session('id_login'))
+                <marquee width="60%" direction="left" height="30px" style="color: black; font-weight: bold;">Selamat Datang <font color="red"><b>{!! Session::get('nama_lengkap'); !!}</b></font>
+                </marquee>
                 <li><a class="nav-link scrollto {{ $isActive('dashboard_admin') }}" href="/dashboard_admin">Beranda</a></li>
                 <li><a class="nav-link scrollto {{ $isActive('profile') }}" href="/profile">AKUN</a></li>
                 <li><a class="nav-link scrollto {{ $isActive('logout') }}" href="{{ route('logout') }}">LOGOUT</a></li>

@@ -18,8 +18,12 @@ class LoginController extends Controller
 
         if (str_contains(strtolower($id_login), 'nim')) {
             $mahasiswa = Mahasiswa::where('nim', $id_login)->first();
-            if ($mahasiswa && $password === 'ppks' . substr($id_login, -7)) {
+            if ($mahasiswa && $password === $mahasiswa['password']) {
                 $request->session()->put('id_login', $id_login);
+                $request->session()->put('nama_lengkap', $mahasiswa['nama_lengkap']);
+                $request->session()->put('program_studi', $mahasiswa['program_studi']);
+                $request->session()->put('tahun_angkatan', $mahasiswa['tahun_angkatan']);
+                $request->session()->put('email', $mahasiswa['email']);
                 return redirect('/dashboard')->with('success', 'Login berhasil!');
             } else {
                 return redirect()->back()->with('error', 'Data mahasiswa tidak ditemukan atau password salah');
@@ -42,8 +46,11 @@ class LoginController extends Controller
             }
         } elseif (str_contains(strtolower($id_login), 'idpeg')) {
             $petugas = Petugas::where('idpeg', $id_login)->first();
-            if ($petugas && $password === 'adminppks' . substr($id_login, -2)) {
+            if ($petugas && $password === $petugas['password']) {
                 $request->session()->put('id_login', $id_login);
+                $request->session()->put('kode_jabatan', $petugas['kode_jabatan']);
+                $request->session()->put('jabatan_satgas', $petugas['jabatan_satgas']);
+                $request->session()->put('nama_lengkap', $petugas['nama_lengkap']);
                 return redirect('/dashboard_admin')->with('success', 'Login berhasil!');
             } else {
                 return redirect()->back()->with('error', 'Data petugas tidak ditemukan atau password salah');

@@ -61,11 +61,12 @@
                         <th style="border: 1px solid #828282;">Nama Lengkap Pelapor</th>
                         <th style="border: 1px solid #828282;">Jenis Identitas Pelapor</th>
                         <th style="border: 1px solid #828282;">Nomor Identitas Pelapor</th>
-                        <th style="border: 1px solid #828282;">Nama Lengkap Terlapor</th>
-                        <th style="border: 1px solid #828282;">Status Terlapor</th>
+                        <!-- <th style="border: 1px solid #828282;">Nama Lengkap Terlapor</th> -->
+                        <!-- <th style="border: 1px solid #828282;">Status Terlapor</th> -->
                         <!-- <th style="border: 1px solid #828282;">Kategori Laporan Kekerasan</th> -->
                         <th style="border: 1px solid #828282;">Status Laporan</th>
-                        <th style="border: 1px solid #828282;">Penanganan</th>
+                        <!-- <th style="border: 1px solid #828282;">Penanganan</th> -->
+                        <th style="border: 1px solid #828282;">Aksi</th>
                     </tr>
                     @foreach($laporan_kekerasan_seksual as $laporan_ks)
                     <tr>
@@ -74,12 +75,12 @@
                         <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->nama_lengkap_pelapor }}</td>
                         <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->jenis_identitas_pelapor }}</td>
                         <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->nomor_identitas_pelapor }}</td>
-                        <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->nama_lengkap_terlapor }}</td>
-                        <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->status_terlapor }}</td>
+                        <!-- <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->nama_lengkap_terlapor }}</td> -->
+                        <!-- <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->status_terlapor }}</td> -->
                         <!-- <td style="border: 1px solid #828282; padding: 8px;">
                             @if($laporan_ks->total_bobot >= 0 && $laporan_ks->total_bobot <= 0.65) Golongan Berat @elseif($laporan_ks->total_bobot >= 0.66 && $laporan_ks->total_bobot <= 1) Golongan Ringan @else Undefined @endif </td> -->
-                        <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->status_laporan }}</td>
-                        <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->penanganan }}</td>
+                        <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->nama_alur }}</td>
+                        <!-- <td style="border: 1px solid #828282; padding: 8px;">{{ $laporan_ks->penanganan }}</td> -->
                     </tr>
                     @endforeach
                 </table>

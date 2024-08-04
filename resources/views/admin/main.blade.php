@@ -12,8 +12,9 @@
     @endif
 
     <section></section>
-    <section id="" style="height: 60vh; display: flex; justify-content: center; align-items: center;">
-        <div class="justify-content-center" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+    <section id="" style="height: 50vh; display: flex; justify-content: center; align-items: center;">
+        @if(Session::get('kode_jabatan') == '02')
+        <div class="justify-content-center" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
             <a href="/data_mahasiswa" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
                 <div id="jumlah_mahasiswa" style="font-size: 36px; margin-bottom: 10px;"></div>
                 Mahasiswa
@@ -38,23 +39,49 @@
                 <div id="jumlah_petugas" style="font-size: 36px; margin-bottom: 10px;"></div>
                 Petugas SATGAS PPKS
             </a>
-            <a href="/data_pengguna" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+            <!-- <a href="/data_pengguna" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
                 <div id="jumlah_pengguna_satgas_ppks" style="font-size: 36px; margin-bottom: 10px;"></div>
                 Pengguna SATGAS PPKS
-            </a>
-            <a href="/kelola_laporan" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+            </a> -->
+            <!-- <a href="/kelola_laporan" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
                 <div id="jumlah_laporan" style="font-size: 36px; margin-bottom: 10px;"></div>
                 Kelola Laporan
-            </a>
-            <!-- <a href="/laporan_masuk" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
-                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">5</div>
+            </a>  -->
+        </div>
+        @elseif(Session::get('kode_jabatan') == '03')
+        <div class="justify-content-center" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <a href="/view_laporan_masuk_divisi_pelaporan" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_laporan_masuk_div_pelaporan}}</div>
                 Laporan Masuk
             </a>
             <a href="/laporan_masuk" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
-                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">5</div>
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_selesai_div_pelaporan}}</div>
                 Laporan Selesai
-            </a> -->
+            </a>
         </div>
+        @elseif(Session::get('kode_jabatan') == '04')
+        <div class="justify-content-center" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <a href="/view_laporan_masuk_divisi_deteksi" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_laporan_masuk_div_pencegahan}}</div>
+                Laporan Masuk
+            </a>
+            <a href="/laporan_masuk" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_selesai_div_pencegahan}}</div>
+                Laporan Selesai
+            </a>
+        </div>
+        @elseif(Session::get('kode_jabatan') == '05')
+        <div class="justify-content-center" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <a href="/view_laporan_masuk_divisi_pemulihan" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_laporan_masuk_div_pemulihan}}</div>
+                Laporan Masuk
+            </a>
+            <a href="/laporan_masuk" class="card" style="background-color: blue; width: 250px; height: 150px; border: 1px solid yellow; padding: 20px; color: yellow; font-weight: bold; text-align: center; text-decoration: none;">
+                <div id="jumlah_masuk" style="font-size: 36px; margin-bottom: 10px;">{{$jumlah_selesai_div_pemulihan}}</div>
+                Laporan Selesai
+            </a>
+        </div>
+        @endif
     </section>
 
     <!-- ======= Charts Section ======= -->
